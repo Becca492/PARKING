@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link href="assets/css/dashbord.css" rel="stylesheet">
+<title>Parking – Tableau de bord</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-placeholder">
+      <div style="position:relative;display:inline-block;">
+        <span style="font-size:3rem;">🚗</span>
+        <div class="logo-pin" style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;font-size:.7rem;">
+          <span>P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-section">Principal</div>
+  <div class="nav-item active"><span class="icon">⊞</span> Tableau de bord</div>
+  <div class="nav-item"><span class="icon">📊</span> Statistiques</div>
+  <div class="nav-item"><span class="icon">🧾</span> Revenus</div>
+
+  <div class="nav-section">Gestion</div>
+  <div class="nav-item"><span class="icon">👥</span> Accès</div>
+  <div class="nav-item"><span class="icon">🏷️</span> Promotions</div>
+  <div class="nav-item"><span class="icon">🚘</span> Parking</div>
+  <div class="nav-item"><span class="icon">🔔</span> Notifications</div>
+  <div class="nav-item"><span class="icon">⚙️</span> Paramétrages</div>
+  <div class="nav-item"><span class="icon">🗑️</span> Corbeille</div>
+
+  <div class="sidebar-spacer"></div>
+  <div class="nav-bottom">
+    <div class="nav-item"><span class="icon">⬛</span> Déconnexion</div>
+    <div class="nav-item"><span class="icon">❓</span> Aide</div>
+  </div>
+</aside>
+
+
+<div class="main">
+  
+  <div class="topbar">
+    <h1>Tableau de bord</h1>
+    <div class="search">🔍 &nbsp;Recherche</div>
+    <div class="user-info">
+      <div class="user-name">
+        <strong>Rebecca KANGBE</strong>
+        <span>👤 Administrateur principal</span>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+
+ 
+  <div class="content">
+
+ 
+    <div style="display:flex;flex-direction:column;gap:20px;">
+
+      
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Forfait le plus demandé</span>
+          <span class="card-filter">Trier par ▾ <span class="tag-month">Ce mois</span></span>
+        </div>
+        <div class="chart-area">
+          <canvas id="forfaitChart"></canvas>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="dot" style="background:#2a4a3d;"></div> Forfait Horaire</div>
+          <div class="legend-item"><div class="dot" style="background:#6e7848;"></div> Forfait Journée</div>
+          <div class="legend-item"><div class="dot" style="background:#a0a080;"></div> Forfait Semaine</div>
+        </div>
+      </div>
+
+      
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Analyse clients</span>
+          <span class="card-filter" style="color:var(--dark);font-weight:600;cursor:pointer;">Voir plus</span>
+        </div>
+        <div class="analyse-grid">
+          <div class="card1">
+            <div class="trucks-row">
+              🚛🚛🚛🚛🚛🚛🚛🚗🚗🚗
+            </div>
+            <div class="analyse-legend">
+              <span><span style="color:var(--dark);">●</span> 70 % Engins</span>
+              <span><span style="color:#a0a080;">●</span> 30 % Véhicule</span>
+            </div>
+          </div>
+          <div class="donut-card">
+            <div class="donut-wrap">
+              <svg viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="10"/>
+                <circle cx="40" cy="40" r="32" fill="none" stroke="var(--lime)" stroke-width="10"
+                  stroke-dasharray="140 61" stroke-linecap="round" transform="rotate(-90 40 40)"/>
+              </svg>
+              <div class="donut-label">70%</div>
+            </div>
+            <div class="donut-info">
+              <strong>7 sur 10</strong><br>
+              clients ont un<br>
+              <span class="badge-engin">Engins</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+   
+    <div class="right-col">
+      <div style="background:var(--card);border-radius:16px;padding:20px;">
+        <div class="gains-header">
+          <span class="gains-title">Aperçu des gains</span>
+          <span class="details-link">Details</span>
+        </div>
+
+        
+        <div class="total-card" style="margin-bottom:12px;">
+          <button class="more-btn">⋮</button>
+          <div class="total-label">Total mensuels</div>
+          <div class="total-amount">1.569.548 <span class="total-currency">FCFA</span></div>
+          <div class="total-sub">
+            <span class="play-icon">▶</span>
+            Pour tout les paiements
+          </div>
+          <div class="total-desc">Les revenus totaux s'élèvent à 500 000 pour tous les forfaits vendus ce mois-ci.</div>
+        </div>
+
+       <div class="bord">
+        <div class="rev-card" style="margin-bottom:12px;">
+          <div class="rev-label">
+            Revenus journalier
+            <button class="more-btn-sm">⋮</button>
+          </div>
+          <div class="rev-amount">277.943 <span class="rev-currency">FCFA</span></div>
+          <div class="rev-sub"><span class="play-icon" style="background:var(--bg);color:var(--dark);">▶</span> Pour le parking horaire</div>
+          <div class="rev-desc">Réservation par heures</div>
+        </div>
+
+       
+        <div class="rev-card1">
+          <div class="rev-label">
+            Revenus journalier
+            <button class="more-btn-sm">⋮</button>
+          </div>
+          <div class="rev-amount">291.604 <span class="rev-currency">FCFA</span></div>
+          <div class="rev-sub"><span class="play-icon" style="background:var(--bg);color:var(--dark);">▶</span> Pour le parking journalier</div>
+          <div class="rev-desc">Réservation pour la journée</div>
+        </div>
+         </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="assets/js/dashbord.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link href="assets/css/park.css" rel="stylesheet">
+<title>Parking </title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-placeholder">
+      <div style="position:relative;display:inline-block;">
+        <span style="font-size:3rem;">🚗</span>
+        <div class="logo-pin" style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;font-size:.7rem;">
+          <span>P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-section">Principal</div>
+  <div class="nav-item"><span class="icon">⊞</span> Tableau de bord</div>
+  <div class="nav-item"><span class="icon">📊</span> Statistiques</div>
+  <div class="nav-item"><span class="icon">🧾</span> Revenus</div>
+
+  <div class="nav-section">Gestion</div>
+  <div class="nav-item"><span class="icon">👥</span> Accès</div>
+  <div class="nav-item"><span class="icon">🏷️</span> Promotions</div>
+  <div class="nav-item active"><span class="icon">🚘</span> Parking</div>
+  <div class="nav-item"><span class="icon">🔔</span> Notifications</div>
+  <div class="nav-item"><span class="icon">⚙️</span> Paramétrages</div>
+  <div class="nav-item"><span class="icon">🗑️</span> Corbeille</div>
+<div class="sidebar-spacer"></div>
+  <div class="nav-bottom">
+    <div class="nav-item"><span class="icon">⬛</span> Déconnexion</div>
+    <div class="nav-item"><span class="icon">❓</span> Aide</div>
+  </div>
+</aside>
+
+
+<div class="main">
+  
+  <div class="topbar">
+    <h1>Tableau de bord</h1>
+    <div class="search">🔍 &nbsp;Recherche</div>
+    <div class="user-info">
+      <div class="user-name">
+        <strong>Rebecca KANGBE</strong>
+        <span>👤 Administrateur principal</span>
+      </div>
+      <div class="avatar"></div>
+    </div>
+  </div>
+<div class="content">
+    <div class="content-header">
+      <h2 class="content-title">Vue D'ensemble</h2>
+      <div class="filter-bar">
+        <span class="filter-label">Trier par</span>
+        <span style="color:var(--text-muted); font-size:12px;">▼</span>
+        <div class="badge-live">
+          <div class="live-dot"></div>
+          En temps réel
+        </div>
+      </div>
+      <div class="action-btns">
+        <button class="btn-icon btn-add">＋</button>
+        <button class="btn-icon btn-edit">✏️</button>
+      </div>
+    </div>
+
+    <p class="update-time">Mis à jour il y a 2 min</p>
+    <div class="parking-grid" id="parkingGrid"></div>
+  </div>
+</main>
+
+<script src="assets/js/park.js"></script>
+
+ 
+  </body>
+</html>
