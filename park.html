@@ -14,16 +14,14 @@
   <div class="sidebar-logo">
     <div class="logo-placeholder">
       <div style="position:relative;display:inline-block;">
-        <span style="font-size:3rem;">🚗</span>
-        <div class="logo-pin" style="position:absolute;top:-8px;right:-8px;width:24px;height:24px;font-size:.7rem;">
-          <span>P</span>
-        </div>
+                    <img src="assets/img/2.png" alt="" />
+
       </div>
     </div>
   </div>
 
   <div class="nav-section">Principal</div>
-  <div class="nav-item"><span class="icon">⊞</span> Tableau de bord</div>
+  <a class="nav-item" href="dashbord.html" ><span class="icon">⊞</span> Tableau de bord</a>
   <div class="nav-item"><span class="icon">📊</span> Statistiques</div>
   <div class="nav-item"><span class="icon">🧾</span> Revenus</div>
 
@@ -45,7 +43,7 @@
 <div class="main">
   
   <div class="topbar">
-    <h1>Tableau de bord</h1>
+    <h1>PARKING</h1>
     <div class="search">🔍 &nbsp;Recherche</div>
     <div class="user-info">
       <div class="user-name">
@@ -59,13 +57,21 @@
     <div class="content-header">
       <h2 class="content-title">Vue D'ensemble</h2>
       <div class="filter-bar">
-        <span class="filter-label">Trier par</span>
-        <span style="color:var(--text-muted); font-size:12px;">▼</span>
-        <div class="badge-live">
-          <div class="live-dot"></div>
-          En temps réel
-        </div>
-      </div>
+  <span class="filter-label">Trier par</span>
+  <select class="filter-select" id="filterEtage" onchange="filtrerEtage(this.value)">
+    <option value="tous">Tous les étages</option>
+    <option value="0">Étage 0 (RDC)</option>
+    <option value="1">Étage 1</option>
+    <option value="2">Étage 2</option>
+    <option value="3">Étage 3</option>
+  </select>
+  <select class="filter-select" id="filterEmplacement" onchange="filtrerEmplacement(this.value)">
+    <option value="tous">Tous les emplacements</option>
+    <option value="libre">🟢 Libre</option>
+    <option value="occupe">🔴 Occupé</option>
+    <option value="reserve">🟡 Réservé</option>
+  </select>
+</div>
       <div class="action-btns">
         <button class="btn-icon btn-add">＋</button>
         <button class="btn-icon btn-edit">✏️</button>
@@ -74,8 +80,112 @@
 
     <p class="update-time">Mis à jour il y a 2 min</p>
     <div class="parking-grid" id="parkingGrid"></div>
+    <div class="lot-row">
+        <div class="zone" data-etage="0">
+          <div class="zbadge">A 01</div>
+          <div class="sgrid">
+            <div class="stall reserve"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall reserve"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall emp occupe"><span class="en">03</span></div>
+            <div class="stall occupe"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+          <div class="sgrid1">
+            <div class="stall occupe"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall occupe"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall occupe"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall occupe"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+        </div>
+        <div class="zone" data-etage="0">
+          <div class="zbadge">B 01</div>
+          <div class="sgrid">
+            <div class="stall libre"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall libre"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall libre"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall libre"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+          <div class="sgrid1">
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+        </div>
+        <div class="zone" data-etage="0">
+          <div class="zbadge">C 01</div>
+          <div class="sgrid">
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+          <div class="sgrid1">
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+        </div>
+        
   </div>
+  <div class="lane">
+    <span>Entrée</span><div>➜➜➜</span></div><span>Sortie</span>
+    <span>Entrée</span><div>➜➜➜</span></div><span>Sortie</span>
+    <span>Entrée</span><div>➜➜➜</span></div><span>Sortie</span>
+  </div>
+   <div class="lot-row">
+
+        <div class="zone"data-etage="1">
+          <div class="zbadge">D 01</div>
+          <div class="sgrid">
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall emp"><span class="en">03</span></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+          <div class="sgrid1">
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+        </div>
+        <div class="zone"data-etage="1">
+          <div class="zbadge">F 01</div>
+          <div class="sgrid">
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+          <div class="sgrid1">
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+        </div>
+         <div class="zone" data-etage="1">
+          <div class="zbadge">G 01</div>
+          <div class="sgrid">
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+          <div class="sgrid1">
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+              <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+            <div class="stall"><img src="log/15.svg" alt="voiture"></div>
+          </div>
+        </div>
+        
 </main>
+  
+      
+
+
 
 <script src="assets/js/park.js"></script>
 

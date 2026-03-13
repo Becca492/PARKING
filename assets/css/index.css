@@ -92,6 +92,9 @@
             width: 300px;
             margin-bottom: 20px;
         }
+        a {
+  text-decoration: none;
+}
 
         @media(max-width: 900px) {
             .container {
