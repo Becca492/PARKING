@@ -402,3 +402,6 @@ body {
 .stall:hover .dp {
   display: flex;
 }
+a {
+  text-decoration: none;
+}
