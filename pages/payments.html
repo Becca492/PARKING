@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiements - Parking</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- CSS -->
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/components/sidebar.css" rel="stylesheet">
+    <link href="../css/components/topbar.css" rel="stylesheet">
+    <link href="../css/pages/payments.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar container -->
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <!-- Topbar container -->
+            <div id="topbar-container"></div>
+            
+            <div class="content-wrapper">
+                <!-- En-tête -->
+                <div class="page-header">
+                    <h2><i class="fas fa-credit-card"></i> Gestion des paiements</h2>
+                    <div class="header-actions">
+                        <button class="btn-export" onclick="PaymentsPage.exportPayments()">
+                            <i class="fas fa-download"></i> Exporter
+                        </button>
+                        <button class="btn-primary" onclick="PaymentsPage.openModal()">
+                            <i class="fas fa-plus"></i> Nouveau paiement
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Statistiques -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Chiffre d'affaires</div>
+                            <div class="stat-value" id="totalRevenue">0 FCFA</div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> +12% vs mois dernier
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Paiements aujourd'hui</div>
+                            <div class="stat-value" id="todayPayments">0 FCFA</div>
+                            <div class="stat-trend">12 transactions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Taux de succès</div>
+                            <div class="stat-value" id="successRate">98%</div>
+                            <div class="stat-trend negative">3 échoués</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Ticket moyen</div>
+                            <div class="stat-value" id="averageTicket">0 FCFA</div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> +5% vs hier
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtres -->
+                <div class="filters-section">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label><i class="fas fa-calendar"></i> Période</label>
+                            <select class="filter-select" id="periodFilter">
+                                <option value="today">Aujourd'hui</option>
+                                <option value="yesterday">Hier</option>
+                                <option value="week">Cette semaine</option>
+                                <option value="month" selected>Ce mois</option>
+                                <option value="custom">Personnalisée</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label><i class="fas fa-tag"></i> Statut</label>
+                            <select class="filter-select" id="statusFilter">
+                                <option value="all">Tous</option>
+                                <option value="completed">Complétés</option>
+                                <option value="pending">En attente</option>
+                                <option value="failed">Échoués</option>
+                                <option value="refunded">Remboursés</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label><i class="fas fa-credit-card"></i> Méthode</label>
+                            <select class="filter-select" id="methodFilter">
+                                <option value="all">Toutes</option>
+                                <option value="cash">Espèces</option>
+                                <option value="card">Carte</option>
+                                <option value="mobile">Mobile Money</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group search-filter">
+                            <label><i class="fas fa-search"></i> Recherche</label>
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Client, réservation..." id="searchInput">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tableau des paiements -->
+                <div class="table-container">
+                    <table class="data-table" id="paymentsTable">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> ID</th>
+                                <th><i class="fas fa-clock"></i> Date</th>
+                                <th><i class="fas fa-user"></i> Client</th>
+                                <th><i class="fas fa-calendar-check"></i> Réservation</th>
+                                <th><i class="fas fa-money-bill"></i> Montant</th>
+                                <th><i class="fas fa-credit-card"></i> Méthode</th>
+                                <th><i class="fas fa-tag"></i> Statut</th>
+                                <th><i class="fas fa-fingerprint"></i> Transaction</th>
+                                <th><i class="fas fa-cog"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTableBody">
+                            <tr>
+                                <td colspan="9" class="text-center">
+                                    <i class="fas fa-spinner fa-spin"></i> Chargement...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <button class="btn-icon" onclick="PaymentsPage.changePage('prev')">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="page-info" id="pageInfo">Page 1 sur 5</span>
+                        <button class="btn-icon" onclick="PaymentsPage.changePage('next')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nouveau Paiement -->
+<div class="modal" id="paymentModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-plus-circle"></i> Nouveau paiement</h2>
+            <button class="modal-close" onclick="PaymentsPage.closePaymentModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-check"></i> Réservation</label>
+                    <select class="form-control" id="reservationId" required>
+                        <option value="">Sélectionner une réservation</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Client</label>
+                    <input type="text" class="form-control" id="clientName" readonly disabled>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill"></i> Montant</label>
+                        <input type="number" class="form-control" id="amount" step="100" min="0" placeholder="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-credit-card"></i> Méthode</label>
+                        <select class="form-control" id="paymentMethod" required>
+                            <option value="cash">💵 Espèces</option>
+                            <option value="card">💳 Carte bancaire</option>
+                            <option value="mobile">📱 Mobile Money</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill-wave"></i> Devise</label>
+                        <select class="form-control" id="currency">
+                            <option value="FCFA">FCFA</option>
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="mobileOperatorGroup" style="display: none;">
+                        <label><i class="fas fa-mobile-alt"></i> Opérateur</label>
+                        <select class="form-control" id="mobileOperator">
+                            <option value="Orange">📱 Orange Money</option>
+                            <option value="MTN">📱 MTN Money</option>
+                            <option value="Moov">📱 Moov Money</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="PaymentsPage.closePaymentModal()">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-check"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal Détails Paiement -->
+    <div class="modal" id="paymentDetailsModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Détails du paiement</h2>
+                <button class="modal-close" onclick="PaymentsPage.closeDetailsModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="payment-details" id="paymentDetails"></div>
+                <div class="payment-actions" id="paymentActions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Remboursement -->
+    <div class="modal" id="refundModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-undo-alt"></i> Effectuer un remboursement</h2>
+                <button class="modal-close" onclick="PaymentsPage.closeRefundModal()">&times;</button>
+            </div>
+            
+            <form id="refundForm">
+                <input type="hidden" id="refundPaymentId">
+                
+                <div class="form-group">
+                    <label><i class="fas fa-money-bill"></i> Montant à rembourser</label>
+                    <input type="number" class="form-control" id="refundAmount" step="100" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-question-circle"></i> Raison du remboursement</label>
+                    <select class="form-control" id="refundReason" required>
+                        <option value="annulation">Annulation de réservation</option>
+                        <option value="non_service">Service non fourni</option>
+                        <option value="double_paiement">Double paiement</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-comment"></i> Commentaires</label>
+                    <textarea class="form-control" id="refundComments" rows="3"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="PaymentsPage.closeRefundModal()">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn-danger">
+                        <i class="fas fa-undo-alt"></i> Confirmer le remboursement
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Reçu -->
+    <div class="modal" id="receiptModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-receipt"></i> Reçu de paiement</h2>
+                <button class="modal-close" onclick="PaymentsPage.closeReceiptModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body" id="receiptContent"></div>
+            
+            <div class="form-actions">
+                <button class="btn-primary" onclick="PaymentsPage.printReceipt()">
+                    <i class="fas fa-print"></i> Imprimer
+                </button>
+                <button class="btn-secondary" onclick="PaymentsPage.closeReceiptModal()">
+                    <i class="fas fa-times"></i> Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components/sidebar.js"></script>
+    <script src="../assets/js/components/topbar.js"></script>
+    <script src="../assets/js/pages/payments.js"></script>
+</body>
+</html>

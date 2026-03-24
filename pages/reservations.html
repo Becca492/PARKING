@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservations - Parking</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- CSS -->
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/components/sidebar.css" rel="stylesheet">
+    <link href="../css/components/topbar.css" rel="stylesheet">
+    <link href="../css/pages/reservations.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <h1>Gestion des réservations</h1>
+                <div class="search">
+                    <i class="fas fa-search"></i> Recherche
+                </div>
+                <div class="user-info">
+                    <div class="user-name">
+                        <strong id="userName">Rebecca KANGBE</strong>
+                        <span id="userRole"><i class="fas fa-user-circle"></i> Administrateur</span>
+                    </div>
+                    <div class="avatar"></div>
+                </div>
+            </div>
+            
+            <div class="content-wrapper">
+                <!-- En-tête -->
+                <div class="page-header">
+                    <h2><i class="fas fa-calendar-check"></i> Gestion des réservations</h2>
+                    <button class="btn-primary" onclick="ReservationsPage.openModal()">
+                        <i class="fas fa-plus"></i> Nouvelle réservation
+                    </button>
+                </div>
+                
+                <!-- Statistiques rapides -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total réservations</div>
+                            <div class="stat-value" id="totalReservations">156</div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> +12% ce mois
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">En cours</div>
+                            <div class="stat-value" id="activeReservations">23</div>
+                            <div class="stat-trend">Aujourd'hui</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Confirmées</div>
+                            <div class="stat-value" id="confirmedReservations">89</div>
+                            <div class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> +5%
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">En attente</div>
+                            <div class="stat-value" id="pendingReservations">12</div>
+                            <div class="stat-trend negative">
+                                <i class="fas fa-arrow-down"></i> -2%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtres -->
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <label><i class="fas fa-calendar"></i> Période:</label>
+                        <select class="filter-select" id="periodFilter">
+                            <option value="today">Aujourd'hui</option>
+                            <option value="week">Cette semaine</option>
+                            <option value="month" selected>Ce mois</option>
+                            <option value="custom">Personnalisée</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label><i class="fas fa-tag"></i> Statut:</label>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="all">Tous</option>
+                            <option value="confirmed">Confirmées</option>
+                            <option value="pending">En attente</option>
+                            <option value="cancelled">Annulées</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group search-filter">
+                        <label><i class="fas fa-user"></i> Client:</label>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Nom client" id="clientFilter">
+                        </div>
+                    </div>
+                    
+                    <button class="btn-export" onclick="ReservationsPage.exportData()">
+                        <i class="fas fa-download"></i> Exporter
+                    </button>
+                </div>
+                
+                <!-- Tableau des réservations -->
+                <div class="table-container">
+                    <table class="data-table" id="reservationsTable">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-hashtag"></i> N° Réservation</th>
+                                <th><i class="fas fa-user"></i> Client</th>
+                                <th><i class="fas fa-parking"></i> Place</th>
+                                <th><i class="fas fa-clock"></i> Début</th>
+                                <th><i class="fas fa-clock"></i> Fin</th>
+                                <th><i class="fas fa-hourglass-half"></i> Durée</th>
+                                <th><i class="fas fa-money-bill"></i> Montant</th>
+                                <th><i class="fas fa-tag"></i> Statut</th>
+                                <th><i class="fas fa-cog"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservationsTableBody">
+                            <tr>
+                                <td colspan="9" class="text-center">
+                                    <i class="fas fa-spinner fa-spin"></i> Chargement...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Réservation -->
+    <div class="modal" id="reservationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"><i class="fas fa-plus-circle"></i> Nouvelle réservation</h2>
+                <button class="modal-close" onclick="ReservationsPage.closeModal()">&times;</button>
+            </div>
+            
+            <form id="reservationForm">
+                <input type="hidden" id="reservationId">
+                
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Client</label>
+                    <select class="form-control" id="userId" required>
+                        <option value="">Sélectionner un client</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-parking"></i> Place de parking</label>
+                        <select class="form-control" id="parkingSpaceId" required>
+                            <option value="">Sélectionner une place</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-car"></i> Véhicule</label>
+                        <select class="form-control" id="vehicleId" required>
+                            <option value="">Sélectionner un véhicule</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Type de réservation</label>
+                        <select class="form-control" id="reservationTypeId" required>
+                            <option value="">Sélectionner un type</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-gift"></i> Code promo</label>
+                        <input type="text" class="form-control" id="promoCode" placeholder="Optionnel">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Date de début</label>
+                        <input type="datetime-local" class="form-control" id="startDateTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Date de fin</label>
+                        <input type="datetime-local" class="form-control" id="endDateTime" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-sticky-note"></i> Note</label>
+                    <textarea class="form-control" id="note" rows="3" placeholder="Instructions particulières..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="ReservationsPage.closeModal()">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Détails Réservation -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Détails de la réservation</h2>
+                <button class="modal-close" onclick="ReservationsPage.closeDetailsModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="reservationDetails">
+                <!-- Rempli par JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components/sidebar.js"></script>
+    <script src="../assets/js/pages/reservations.js"></script>
+</body>
+</html>

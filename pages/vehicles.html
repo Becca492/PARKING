@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Véhicules - Parking</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- CSS -->
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/components/sidebar.css" rel="stylesheet">
+    <link href="../css/components/topbar.css" rel="stylesheet">
+    <link href="../css/pages/vehicles.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <div class="topbar">
+                <h1>Gestion des véhicules</h1>
+                <div class="search">
+                    <i class="fas fa-search"></i> Recherche
+                </div>
+                <div class="user-info">
+                    <div class="user-name">
+                        <strong id="userName">Rebecca KANGBE</strong>
+                        <span id="userRole"><i class="fas fa-user-circle"></i> Administrateur</span>
+                    </div>
+                    <div class="avatar"></div>
+                </div>
+            </div>
+            
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h2><i class="fas fa-car"></i> Gestion des véhicules</h2>
+                    <button class="btn-primary" onclick="VehiclesPage.openModal()">
+                        <i class="fas fa-plus"></i> Nouveau véhicule
+                    </button>
+                </div>
+                
+                <!-- Statistiques -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total véhicules</div>
+                            <div class="stat-value" id="totalVehicles">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Assurés</div>
+                            <div class="stat-value" id="insuredVehicles">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Non assurés</div>
+                            <div class="stat-value" id="uninsuredVehicles">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-parking"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Garés</div>
+                            <div class="stat-value" id="parkedVehicles">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtres -->
+                <div class="filters-section">
+                    <div class="filter-row">
+                        <div class="filter-group search-filter">
+                            <label><i class="fas fa-search"></i> Recherche</label>
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Plaque, marque, modèle..." id="searchInput">
+                            </div>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label><i class="fas fa-tag"></i> Type</label>
+                            <select class="filter-select" id="typeFilter">
+                                <option value="all">Tous types</option>
+                                <option value="voiture">Voitures</option>
+                                <option value="moto">Motos</option>
+                                <option value="utilitaire">Utilitaires</option>
+                                <option value="poids-lourd">Poids lourds</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label><i class="fas fa-shield-alt"></i> Assurance</label>
+                            <select class="filter-select" id="insuranceFilter">
+                                <option value="all">Tous</option>
+                                <option value="insured">Assurés</option>
+                                <option value="uninsured">Non assurés</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label><i class="fas fa-parking"></i> Statut</label>
+                            <select class="filter-select" id="statusFilter">
+                                <option value="all">Tous statuts</option>
+                                <option value="parked">Garés</option>
+                                <option value="outside">Sortis</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vue Toggle -->
+                <div class="view-toggle">
+                    <button class="view-btn active" onclick="VehiclesPage.toggleView('grid')">
+                        <i class="fas fa-th-large"></i> Grille
+                    </button>
+                    <button class="view-btn" onclick="VehiclesPage.toggleView('list')">
+                        <i class="fas fa-list"></i> Liste
+                    </button>
+                </div>
+                
+                <!-- Conteneur -->
+                <div id="vehiclesContainer" class="vehicles-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Véhicule -->
+    <div class="modal" id="vehicleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"><i class="fas fa-car"></i> Nouveau véhicule</h2>
+                <button class="modal-close" onclick="VehiclesPage.closeModal()">&times;</button>
+            </div>
+            
+            <form id="vehicleForm">
+                <input type="hidden" id="vehicleId">
+                
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Propriétaire</label>
+                    <select class="form-control" id="userId" required>
+                        <option value="">Sélectionner un propriétaire</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> Plaque</label>
+                        <input type="text" class="form-control" id="licensePlate" placeholder="AB-123-CD" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Type</label>
+                        <select class="form-control" id="vehicleType" required>
+                            <option value="voiture">Voiture</option>
+                            <option value="moto">Moto</option>
+                            <option value="utilitaire">Utilitaire</option>
+                            <option value="poids-lourd">Poids lourd</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-trademark"></i> Marque</label>
+                        <input type="text" class="form-control" id="brand" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-cog"></i> Modèle</label>
+                        <input type="text" class="form-control" id="model" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-palette"></i> Couleur</label>
+                        <input type="text" class="form-control" id="color" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Année</label>
+                        <input type="number" class="form-control" id="year" min="1900" max="2025">
+                    </div>
+                </div>
+                
+                <div class="form-group insurance-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="isInsured">
+                        <span><i class="fas fa-shield-alt"></i> Véhicule assuré</span>
+                    </label>
+                </div>
+                
+                <div id="insuranceFields" class="insurance-fields" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Compagnie</label>
+                            <input type="text" class="form-control" id="insuranceCompany">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>N° Police</label>
+                            <input type="text" class="form-control" id="insuranceNumber">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date expiration</label>
+                            <input type="date" class="form-control" id="insuranceExpiry">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-sticky-note"></i> Notes</label>
+                    <textarea class="form-control" id="notes" rows="2" placeholder="Informations complémentaires..."></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="VehiclesPage.closeModal()">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Détails Véhicule -->
+    <div class="modal" id="vehicleDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Détails du véhicule</h2>
+                <button class="modal-close" onclick="VehiclesPage.closeDetailsModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="vehicleDetails"></div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components/sidebar.js"></script>
+    <script src="../assets/js/pages/vehicles.js"></script>
+</body>
+</html>

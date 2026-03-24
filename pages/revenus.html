@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revenus - Parking</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- CSS globaux -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components/sidebar.css">
+    <link rel="stylesheet" href="../css/components/topbar.css">
+    <link rel="stylesheet" href="../css/components/cards.css">
+    <link rel="stylesheet" href="../css/components/tables.css">
+    
+    <!-- CSS spécifique -->
+    <link rel="stylesheet" href="../css/pages/revenus.css">
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <div id="topbar-container"></div>
+            
+            <div class="content-wrapper">
+                <!-- En-tête avec sélecteur de période -->
+                <div class="revenus-header">
+                    <h2>Analyse des revenus</h2>
+                    <div class="period-selector">
+                        <button class="period-btn active" onclick="RevenusPage.changePeriod('jour')">Jour</button>
+                        <button class="period-btn" onclick="RevenusPage.changePeriod('semaine')">Semaine</button>
+                        <button class="period-btn" onclick="RevenusPage.changePeriod('mois')">Mois</button>
+                        <button class="period-btn" onclick="RevenusPage.changePeriod('trimestre')">Trimestre</button>
+                        <button class="period-btn" onclick="RevenusPage.changePeriod('annee')">Année</button>
+                    </div>
+                </div>
+                
+                <!-- KPIs Revenus -->
+                <div class="revenus-kpi-grid">
+                    <div class="revenus-kpi-card">
+                        <div class="kpi-icon">💰</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Revenus totaux</div>
+                            <div class="kpi-value" id="totalRevenue">0 FCFA</div>
+                            <div class="kpi-period" id="totalRevenuePeriod">Période en cours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="revenus-kpi-card">
+                        <div class="kpi-icon">📊</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Moyenne journalière</div>
+                            <div class="kpi-value" id="avgDaily">0 FCFA</div>
+                            <div class="kpi-trend positive" id="avgDailyTrend">+12%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="revenus-kpi-card">
+                        <div class="kpi-icon">🎫</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Ticket moyen</div>
+                            <div class="kpi-value" id="avgTicket">0 FCFA</div>
+                            <div class="kpi-trend positive" id="avgTicketTrend">+5%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="revenus-kpi-card">
+                        <div class="kpi-icon">📈</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Prévision</div>
+                            <div class="kpi-value" id="forecast">0 FCFA</div>
+                            <div class="kpi-trend">Fin de période</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Graphique principal -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Évolution des revenus</h3>
+                        <div class="chart-controls">
+                            <select class="chart-type-select" onchange="RevenusPage.changeChartType(this.value)">
+                                <option value="line">Courbe</option>
+                                <option value="bar">Barres</option>
+                                <option value="area">Aire</option>
+                            </select>
+                            <button class="btn-icon" onclick="RevenusPage.exportChart()">📥</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Graphiques secondaires -->
+                <div class="charts-row">
+                    <!-- Répartition par type -->
+                    <div class="chart-card small">
+                        <h3>Répartition par type</h3>
+                        <div class="chart-container small">
+                            <canvas id="typeChart"></canvas>
+                        </div>
+                        <div class="chart-legend" id="typeLegend"></div>
+                    </div>
+                    
+                    <!-- Répartition par méthode de paiement -->
+                    <div class="chart-card small">
+                        <h3>Méthodes de paiement</h3>
+                        <div class="chart-container small">
+                            <canvas id="paymentChart"></canvas>
+                        </div>
+                        <div class="chart-legend" id="paymentLegend"></div>
+                    </div>
+                </div>
+                
+                <!-- Tableau des revenus détaillés -->
+                <div class="revenue-table-container">
+                    <div class="table-header">
+                        <h3>Détail des transactions</h3>
+                        <div class="table-actions">
+                            <button class="btn-outline" onclick="RevenusPage.exportToExcel()">
+                                📊 Excel
+                            </button>
+                            <button class="btn-outline" onclick="RevenusPage.exportToPDF()">
+                                📄 PDF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <table class="data-table" id="revenueTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Réservation</th>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Place</th>
+                                <th>Durée</th>
+                                <th>Montant</th>
+                                <th>Méthode</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="revenueTableBody">
+                            <tr>
+                                <td colspan="9" class="text-center">Chargement...</td>
+                            </tr>
+                        </tbody>
+                        <tfoot id="revenueTableFooter">
+                            <tr class="total-row">
+                                <td colspan="6" style="text-align: right;"><strong>TOTAL:</strong></td>
+                                <td colspan="3"><strong id="tableTotal">0 FCFA</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <button class="btn-icon" onclick="RevenusPage.prevPage()">◀</button>
+                        <span class="page-info" id="pageInfo">Page 1 sur 5</span>
+                        <button class="btn-icon" onclick="RevenusPage.nextPage()">▶</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/components/sidebar.js"></script>
+    <script src="../assets/js/components/topbar.js"></script>
+    <script src="../assets/js/pages/revenus.js"></script>
+</body>
+</html>

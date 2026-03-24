@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Parking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/pages/index.css">
+</head>
+<body>
+    <div class="top-text">
+        AU CŒUR D’ABIDJAN, NOTRE PARKING VOUS ASSURE UN STATIONNEMENT SÉCURISÉ,
+        ACCESSIBLE ET PARFAITEMENT ORGANISÉ.
+    </div>
+
+    <div class="container">
+        <div class="login-box">
+            <h1>SE CONNECTER</h1>
+            <p>Entrez vos informations de connexion</p>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="phoneNumber" placeholder="NUMERO DE TELEPHONE" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="MOT DE PASSE" required>
+                </div>
+                
+                <button type="submit" class="login-btn">SE CONNECTER</button>
+            </form>
+            
+            <div id="errorMessage" class="error-message"></div>
+        </div>
+
+        <div class="right-side">
+            <img src="../log/LOGO.svg" alt="Voiture Parking">
+        </div>
+    </div>
+
+    <script src="../assets/js/index.js"></script>
+    <script src="../assets/js/pages/index.js"></script>
+</body>
+</html>

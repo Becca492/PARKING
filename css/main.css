@@ -1,0 +1,102 @@
+/* css/main.css - Variables et reset global */
+:root {
+    --dark: #2a4a3d;
+    --dark2: #1e3530;
+    --olive: #6e7848;
+    --lime: #8dc63f;
+    --white: #fff;
+    --bg: #f4f6f1;
+    --text: #2a2a2a;
+    --muted: #888;
+    --card: #fff;
+    --border: #e2e8da;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --info: #17a2b8;
+    
+    --sidebar-width: 220px;
+    --header-height: 70px;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    --transition: all 0.3s ease;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Layout de base pour les pages avec sidebar */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    background: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-wrapper {
+    flex: 1;
+    padding: 24px 28px;
+    overflow-y: auto;
+}
+
+/* Utilitaires */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+
+/* Boutons génériques */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: var(--dark);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--dark2);
+}
+
+.btn-success {
+    background: var(--lime);
+    color: white;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+}

@@ -1,0 +1,28 @@
+<!-- components/topbar.html -->
+<div class="topbar">
+    <h1 id="pageTitle">Tableau de bord</h1>
+    <div class="search">
+        <span>🔍</span>
+        <input type="text" placeholder="Rechercher..." id="globalSearch">
+    </div>
+    <div class="user-info" id="userMenuTrigger">
+        <div class="user-name">
+            <strong id="userName">Rebecca KANGBE</strong>
+            <span id="userRole">👤 Administrateur</span>
+        </div>
+        <div class="avatar" id="userAvatar"></div>
+    </div>
+    
+    <!-- Menu déroulant utilisateur -->
+    <div class="user-dropdown" id="userDropdown">
+        <a href="#" class="user-dropdown-item">
+            <span>👤</span> Mon profil
+        </a>
+        <a href="#" class="user-dropdown-item">
+            <span>⚙️</span> Paramètres
+        </a>
+        <a href="#" class="user-dropdown-item" id="logoutBtn">
+            <span>⬛</span> Déconnexion
+        </a>
+    </div>
+</div>

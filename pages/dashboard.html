@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Parking</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/components/sidebar.css" rel="stylesheet">
+    <link href="../css/pages/dashbord.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar container -->
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <h1>Tableau de bord</h1>
+                <div class="search">🔍 &nbsp;Recherche</div>
+                <div class="user-info">
+                    <div class="user-name">
+                        <strong id="userName">Rebecca KANGBE</strong>
+                        <span id="userRole">👤 Administrateur principal</span>
+                    </div>
+                    <div class="avatar"></div>
+                </div>
+            </div>
+            
+            <div class="content-wrapper">
+                <div class="content">
+                    <!-- Left column -->
+                    <div style="display: flex; flex-direction: column; gap: 20px">
+                        <!-- Card 1: Forfait le plus demandé -->
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="card-title">Forfait le plus demandé</span>
+                                <span class="card-filter">Trier par ▾ <span class="tag-month">Ce mois</span></span>
+                            </div>
+                            <div class="chart-area">
+                                <canvas id="forfaitChart"></canvas>
+                            </div>
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <div class="dot" style="background: #2a4a3d"></div>
+                                    Forfait Horaire
+                                </div>
+                                <div class="legend-item">
+                                    <div class="dot" style="background: #6e7848"></div>
+                                    Forfait Journée
+                                </div>
+                                <div class="legend-item">
+                                    <div class="dot" style="background: #a0a080"></div>
+                                    Forfait Semaine
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Analyse clients -->
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="card-title">Analyse clients</span>
+                                <span class="card-filter" style="color: var(--dark); font-weight: 600; cursor: pointer">Voir plus</span>
+                            </div>
+                            <div class="analyse-grid">
+                                <div>
+                                    <div class="trucks-row">
+                                        <span>🚛</span><span>🚛</span><span>🚛</span><span>🚛</span><span>🚛</span><span>🚛</span><span>🚛</span>
+                                        <span>🚗</span><span>🚗</span><span>🚗</span>
+                                    </div>
+                                    <div class="analyse-legend">
+                                        <span><span style="color: var(--dark)">●</span> 70 % Engins</span>
+                                        <span><span style="color: #a0a080">●</span> 30 % Véhicule</span>
+                                    </div>
+                                </div>
+                                <div class="donut-card">
+                                    <div class="donut-wrap">
+                                        <svg viewBox="0 0 80 80">
+                                            <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="10"/>
+                                            <circle cx="40" cy="40" r="32" fill="none" stroke="var(--lime)" stroke-width="10" 
+                                                    stroke-dasharray="140 61" stroke-linecap="round" transform="rotate(-90 40 40)"/>
+                                        </svg>
+                                        <div class="donut-label">70%</div>
+                                    </div>
+                                    <div class="donut-info">
+                                        <strong>7 sur 10</strong><br>
+                                        clients ont un<br>
+                                        <span class="badge-engin">Engins</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right column -->
+                    <div class="right-col">
+                        <div style="background: var(--card); border-radius: 16px; padding: 20px">
+                            <div class="gains-header">
+                                <span class="gains-title">Aperçu des gains</span>
+                                <span class="details-link" onclick="window.location.href='revenus.html'">Details</span>
+                            </div>
+
+                            <!-- Total mensuel -->
+                            <div class="total-card" style="margin-bottom: 12px">
+                                <button class="more-btn">⋮</button>
+                                <div class="total-label">Total mensuels</div>
+                                <div class="total-amount" id="totalAmount">1.569.548 <span class="total-currency">FCFA</span></div>
+                                <div class="total-sub">
+                                    <span class="play-icon">▶</span>
+                                    Pour tout les paiements
+                                </div>
+                                <div class="total-desc">
+                                    Les revenus totaux s'élèvent à 500 000 pour tous les forfaits vendus ce mois-ci.
+                                </div>
+                            </div>
+
+                            <!-- Revenus journaliers -->
+                            <div class="bord">
+                                <div class="rev-card">
+                                    <div class="rev-label">
+                                        Revenus journalier
+                                        <button class="more-btn-sm">⋮</button>
+                                    </div>
+                                    <div class="rev-amount" id="dailyRevenue1">277.943 <span class="rev-currency">FCFA</span></div>
+                                    <div class="rev-sub">
+                                        <span class="play-icon" style="background: var(--bg); color: var(--dark)">▶</span>
+                                        Pour le parking horaire
+                                    </div>
+                                    <div class="rev-desc">Réservation par heures</div>
+                                </div>
+
+                                <div class="rev-card1">
+                                    <div class="rev-label">
+                                        Revenus journalier
+                                        <button class="more-btn-sm">⋮</button>
+                                    </div>
+                                    <div class="rev-amount" id="dailyRevenue2">291.604 <span class="rev-currency">FCFA</span></div>
+                                    <div class="rev-sub">
+                                        <span class="play-icon" style="background: var(--bg); color: var(--dark)">▶</span>
+                                        Pour le parking journalier
+                                    </div>
+                                    <div class="rev-desc">Réservation pour la journée</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components/sidebar.js"></script>
+    <script src="../assets/js/pages/dashbord.js"></script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques - Parking</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- CSS globaux -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components/sidebar.css">
+    <link rel="stylesheet" href="../css/components/topbar.css">
+    <link rel="stylesheet" href="../css/components/cards.css">
+    
+    <!-- CSS spécifique -->
+    <link rel="stylesheet" href="../css/pages/statistiques.css">
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <div id="topbar-container"></div>
+            
+            <div class="content-wrapper">
+                <!-- En-tête avec sélecteur de période -->
+                <div class="stats-header">
+                    <h2>Statistiques détaillées</h2>
+                    <div class="period-selector">
+                        <button class="period-btn active" onclick="StatsPage.changePeriod('week')">Semaine</button>
+                        <button class="period-btn" onclick="StatsPage.changePeriod('month')">Mois</button>
+                        <button class="period-btn" onclick="StatsPage.changePeriod('quarter')">Trimestre</button>
+                        <button class="period-btn" onclick="StatsPage.changePeriod('year')">Année</button>
+                        <button class="period-btn" onclick="StatsPage.changePeriod('custom')">Personnalisé</button>
+                    </div>
+                </div>
+                
+                <!-- Date picker pour période personnalisée -->
+                <div class="custom-date-range" id="customDateRange" style="display: none;">
+                    <input type="date" class="form-control" id="startDate">
+                    <span>au</span>
+                    <input type="date" class="form-control" id="endDate">
+                    <button class="btn btn-primary" onclick="StatsPage.loadCustomData()">Appliquer</button>
+                </div>
+                
+                <!-- KPIs principaux -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">💰</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Chiffre d'affaires</div>
+                            <div class="kpi-value" id="totalRevenue">0 FCFA</div>
+                            <div class="kpi-trend positive" id="revenueTrend">+12%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📅</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Réservations</div>
+                            <div class="kpi-value" id="totalReservations">0</div>
+                            <div class="kpi-trend positive" id="reservationsTrend">+8%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🅿️</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Taux d'occupation</div>
+                            <div class="kpi-value" id="occupancyRate">0%</div>
+                            <div class="kpi-trend" id="occupancyTrend">Moyenne 65%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon">👥</div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Clients uniques</div>
+                            <div class="kpi-value" id="uniqueClients">0</div>
+                            <div class="kpi-trend positive" id="clientsTrend">+15%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Graphiques ligne 1 -->
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Évolution des revenus</h3>
+                            <select class="chart-type-select" onchange="StatsPage.changeChartType('revenue', this.value)">
+                                <option value="line">Courbe</option>
+                                <option value="bar">Barres</option>
+                                <option value="area">Aire</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Répartition par type</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="typeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Graphiques ligne 2 -->
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Occupation par heure</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="hourlyChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Jours de semaine</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="weekdayChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statistiques détaillées -->
+                <div class="details-grid">
+                    <!-- Top clients -->
+                    <div class="details-card">
+                        <h3>Top 5 clients</h3>
+                        <div class="ranking-list" id="topClients">
+                            <!-- Rempli par JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Moyennes -->
+                    <div class="details-card">
+                        <h3>Moyennes</h3>
+                        <div class="averages-list" id="averages">
+                            <!-- Rempli par JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Occupation par étage -->
+                    <div class="details-card">
+                        <h3>Occupation par étage</h3>
+                        <div class="floor-occupancy" id="floorOccupancy">
+                            <!-- Rempli par JS -->
+                        </div>
+                    </div>
+                    
+                    <!-- Prévisions -->
+                    <div class="details-card">
+                        <h3>Prévisions</h3>
+                        <div class="forecast-list" id="forecast">
+                            <!-- Rempli par JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tableau des performances -->
+                <div class="performance-table">
+                    <h3>Performances journalières</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Réservations</th>
+                                <th>Revenus</th>
+                                <th>Occupation</th>
+                                <th>Nouveaux clients</th>
+                            </tr>
+                        </thead>
+                        <tbody id="performanceBody">
+                            <!-- Rempli par JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/components/sidebar.js"></script>
+    <script src="../assets/js/components/topbar.js"></script>
+    <script src="../assets/js/pages/statistiques.js"></script>
+</body>
+</html>

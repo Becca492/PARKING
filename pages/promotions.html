@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promotions - Parking</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- CSS -->
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/components/sidebar.css" rel="stylesheet">
+    <link href="../css/components/topbar.css" rel="stylesheet">
+    <link href="../css/pages/promotions.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar container -->
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <!-- Topbar -->
+            <div id="topbar-container"></div>
+            
+            <div class="content-wrapper">
+                <!-- En-tête -->
+                <div class="page-header">
+                    <h2><i class="fas fa-tags"></i> Gestion des promotions</h2>
+                    <button class="btn-primary" onclick="PromotionsPage.openModal()">
+                        <i class="fas fa-plus"></i> Nouvelle promotion
+                    </button>
+                </div>
+                
+                <!-- Statistiques -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Promotions actives</div>
+                            <div class="stat-value" id="activePromos">0</div>
+                            <div class="stat-trend positive">En cours</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Utilisations totales</div>
+                            <div class="stat-value" id="totalUses">0</div>
+                            <div class="stat-trend">Toutes promotions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-percent"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Taux d'utilisation</div>
+                            <div class="stat-value" id="usageRate">0%</div>
+                            <div class="stat-trend negative">Moyenne</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Expire bientôt</div>
+                            <div class="stat-value" id="expiringSoon">0</div>
+                            <div class="stat-trend warning">7 jours</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtres -->
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Rechercher une promotion..." id="searchInput">
+                    </div>
+                    
+                    <select class="filter-select" id="statusFilter">
+                        <option value="all">Tous les statuts</option>
+                        <option value="active">Actives</option>
+                        <option value="inactive">Inactives</option>
+                        <option value="expired">Expirées</option>
+                        <option value="upcoming">À venir</option>
+                    </select>
+                    
+                    <select class="filter-select" id="typeFilter">
+                        <option value="all">Tous types</option>
+                        <option value="percentage">Pourcentage (%)</option>
+                        <option value="fixed">Montant fixe (FCFA)</option>
+                    </select>
+                </div>
+                
+                <!-- Grille des promotions -->
+                <div class="promo-grid" id="promoGrid">
+                    <div class="text-center">
+                        <i class="fas fa-spinner fa-spin"></i> Chargement...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Promotion -->
+    <div class="modal" id="promoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"><i class="fas fa-plus-circle"></i> Nouvelle promotion</h2>
+                <button class="modal-close" onclick="PromotionsPage.closeModal()">&times;</button>
+            </div>
+            
+            <form id="promoForm">
+                <input type="hidden" id="promoId">
+                
+                <div class="form-group">
+                    <label><i class="fas fa-heading"></i> Titre</label>
+                    <input type="text" class="form-control" id="title" placeholder="Ex: Promotion été 2024" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-barcode"></i> Code promo</label>
+                    <input type="text" class="form-control" id="code" placeholder="Ex: ETE2024" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Description</label>
+                    <textarea class="form-control" id="description" rows="2" placeholder="Description de l'offre..." required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-percent"></i> Type de réduction</label>
+                        <select class="form-control" id="discountType" required>
+                            <option value="percentage">Pourcentage (%)</option>
+                            <option value="fixed">Montant fixe (FCFA)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calculator"></i> Valeur</label>
+                        <input type="number" class="form-control" id="discountValue" step="0.01" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill"></i> Montant minimum</label>
+                        <input type="number" class="form-control" id="minAmount" step="1000" min="0" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-chart-line"></i> Réduction max</label>
+                        <input type="number" class="form-control" id="maxDiscount" step="1000" min="0" placeholder="Illimité">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Date de début</label>
+                        <input type="datetime-local" class="form-control" id="startDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Date de fin</label>
+                        <input type="datetime-local" class="form-control" id="endDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-users"></i> Utilisations max</label>
+                        <input type="number" class="form-control" id="maxUses" min="1" value="100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Par utilisateur</label>
+                        <input type="number" class="form-control" id="maxPerUser" min="1" value="1">
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="isActive" checked>
+                        <span><i class="fas fa-check-circle"></i> Promotion active</span>
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="PromotionsPage.closeModal()">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Détails Promotion -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-info-circle"></i> Détails de la promotion</h2>
+                <button class="modal-close" onclick="PromotionsPage.closeDetailsModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="promoDetails"></div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components/sidebar.js"></script>
+    <script src="../assets/js/components/topbar.js"></script>
+    <script src="../assets/js/pages/promotions.js"></script>
+</body>
+</html>

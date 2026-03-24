@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilisateurs - Parking</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- CSS -->
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/components/sidebar.css" rel="stylesheet">
+    <link href="../css/components/topbar.css" rel="stylesheet">
+    <link href="../css/pages/users.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+        
+        <div class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <h1>Gestion des utilisateurs</h1>
+                <div class="search">
+                    <i class="fas fa-search"></i> Recherche
+                </div>
+                <div class="user-info">
+                    <div class="user-name">
+                        <strong id="userName">Rebecca KANGBE</strong>
+                        <span id="userRole"><i class="fas fa-user-circle"></i> Administrateur</span>
+                    </div>
+                    <div class="avatar"></div>
+                </div>
+            </div>
+            
+            <div class="content-wrapper">
+                <!-- En-tête -->
+                <div class="users-header">
+                    <h2>Gestion des utilisateurs</h2>
+                    <button class="btn-primary" onclick="UsersPage.openModal()">
+                        <i class="fas fa-plus"></i> Nouvel utilisateur
+                    </button>
+                </div>
+                
+                <!-- Statistiques -->
+                <div class="users-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Total utilisateurs</div>
+                            <div class="stat-value" id="totalUsers">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Administrateurs</div>
+                            <div class="stat-value" id="totalAdmins">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Utilisateurs actifs</div>
+                            <div class="stat-value" id="activeUsers">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Nouveaux (mois)</div>
+                            <div class="stat-value" id="newUsers">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filtres -->
+                <div class="filter-section">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="filter-input" placeholder="Rechercher..." id="searchInput">
+                    </div>
+                    
+                    <select class="filter-select" id="roleFilter">
+                        <option value="all">Tous les rôles</option>
+                        <option value="Administrateur">Administrateurs</option>
+                        <option value="Utilisateur">Utilisateurs</option>
+                    </select>
+                    
+                    <select class="filter-select" id="statusFilter">
+                        <option value="all">Tous statuts</option>
+                        <option value="active">Actifs</option>
+                        <option value="inactive">Inactifs</option>
+                    </select>
+                    
+                    <select class="filter-select" id="sortFilter">
+                        <option value="name">Trier par nom</option>
+                        <option value="date">Trier par date</option>
+                        <option value="activity">Trier par activité</option>
+                    </select>
+                </div>
+                
+                <!-- Vue Toggle -->
+                <div class="users-view-toggle">
+                    <button class="view-btn active" onclick="UsersPage.toggleView('grid')">
+                        <i class="fas fa-th-large"></i> Grille
+                    </button>
+                    <button class="view-btn" onclick="UsersPage.toggleView('list')">
+                        <i class="fas fa-list"></i> Liste
+                    </button>
+                </div>
+                
+                <!-- Conteneur pour la vue grille/liste -->
+                <div id="usersContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Utilisateur -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"><i class="fas fa-user-plus"></i> Nouvel utilisateur</h2>
+                <button class="modal-close" onclick="UsersPage.closeModal()">&times;</button>
+            </div>
+            
+            <form id="userForm">
+                <input type="hidden" id="userId">
+                
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nom complet</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Entrez le nom complet" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="email@exemple.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Téléphone</label>
+                        <input type="tel" class="form-control" id="phoneNumber" placeholder="+225 00 00 00 00" required>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="passwordField">
+                    <label><i class="fas fa-lock"></i> Mot de passe</label>
+                    <input type="password" class="form-control" id="password" placeholder="********">
+                    <small class="form-text text-muted">Minimum 8 caractères</small>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-user-tag"></i> Rôle</label>
+                        <select class="form-control" id="role" required>
+                            <option value="Utilisateur">Utilisateur</option>
+                            <option value="Administrateur">Administrateur</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-toggle-on"></i> Statut</label>
+                        <select class="form-control" id="isActive">
+                            <option value="1">Actif</option>
+                            <option value="0">Inactif</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> Permis de conduire</label>
+                    <input type="text" class="form-control" id="driverLicense" placeholder="Numéro de permis">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Adresse</label>
+                    <textarea class="form-control" id="address" rows="2" placeholder="Adresse complète"></textarea>
+                </div>
+                
+                <div class="password-section" id="passwordSection" style="display: none;">
+                    <h4><i class="fas fa-key"></i> Changer le mot de passe</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nouveau mot de passe</label>
+                            <input type="password" class="form-control" id="newPassword" placeholder="********">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmer</label>
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="********">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="UsersPage.closeModal()">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Détails Utilisateur -->
+    <div class="modal" id="userDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-circle"></i> Détails utilisateur</h2>
+                <button class="modal-close" onclick="UsersPage.closeDetailsModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="userDetails">
+                <!-- Rempli par JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/components/sidebar.js"></script>
+    <script src="../assets/js/pages/users.js"></script>
+</body>
+</html>
